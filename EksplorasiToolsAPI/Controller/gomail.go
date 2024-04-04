@@ -17,7 +17,7 @@ func sendEmail(reservation m.Reservation) {
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, "user", "password")
 
-	// Kirim email dalam goroutine
+	// kirim email dalam goroutine
 	go func() {
 		if err := d.DialAndSend(m); err != nil {
 			log.Println("Failed to send email:", err)
@@ -26,12 +26,3 @@ func sendEmail(reservation m.Reservation) {
 		}
 	}()
 }
-
-// func createEmail(reservation m.Reservation) *gomail.Message {
-// 	m := gomail.NewMessage()
-// 	m.SetHeader("From", "jonathansena798@gmail.com")
-// 	m.SetHeader("To", reservation.Email)
-// 	m.SetHeader("Subject", "Reservation Confirmation")
-// 	m.SetBody("text/html", "Thank you for your reservation, "+reservation.Name+"! Your table will be ready at "+reservation.Time+".")
-// 	return m
-// }
