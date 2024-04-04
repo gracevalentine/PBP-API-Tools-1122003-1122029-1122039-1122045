@@ -18,16 +18,51 @@ func init() {
 		DB:       0,  // use default DB
 	})
 }
-func SaveReservation(ctx context.Context, client *redis.Client, key string, res *Model.Reservation) error {
-	return client.Set(ctx, key, res, 0).Err()
+func (r *Reservation) MarshalBinary() ([]byte, error) {
+	return json.Marshal(r)
 }
 
-func saveReservation(reservation m.Reservation) {
-	// Simpan reservasi ke cache
-	err := client.Set("latest_reservation", reservation, 0).Err()
-	if err != nil {
-		log.Println("Failed to save reservation:", err)
-	} else {
-		log.Println("Reservation saved successfully")
-	}
+func (r *Reservation) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, r)
 }
+
+func SaveReservation(ctx context.Context, client *redis.Client, key string, res *Reservation) error {
+	data, err := res.MarshalBinary()
+	if err != nil {
+		return err
+	}
+	return client.Set(ctx, key, data, 0).Err()
+}
+
+func GetReservation(ctx context.Context, client *redis.Client, key string) (*Reservation, error) {
+	data, err := client.Get(ctx, key).Result()
+	if err != nil {
+		return nil, err
+	}
+	var res Reservation
+	if err := res.UnmarshalBinary([]byte(data)); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func saveReservation(ctx context.Context, client *redis.Client, key string, res *Model.Reservation) error {
+	data, err := res.MarshalBinary()
+	if err != nil {
+		return err
+	}
+	return client.Set(ctx, key, data, 0).Err()
+}
+
+func getReservation(ctx context.Context, client *redis.Client, key string) (*Model.Reservation, error) {
+	data, err := client.Get(ctx, key).Result()
+	if err != nil {
+		return nil, err
+	}
+	var res Model.Reservation
+	if err := res.UnmarshalBinary([]byte(data)); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
