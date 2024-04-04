@@ -19,15 +19,13 @@ func HandleReservation(ctx context.Context, client *redis.Client, w http.Respons
 			return
 		}
 
-		// Simpan reservasi ke cache
+		// simpan reservasi ke cache
 		err = saveReservation(client, "latest_reservation", &res)
 		if err != nil {
 			http.Error(w, "Failed to save reservation", http.StatusInternalServerError)
 			return
 		}
 
-		// Jadwalkan pengiriman email
-		// Anda perlu memperbarui fungsi scheduleJob Anda untuk menerima argumen yang sama
 		err = scheduleJob(res)
 		if err != nil {
 			http.Error(w, "Failed to schedule email", http.StatusInternalServerError)
