@@ -18,6 +18,9 @@ func init() {
 		DB:       0,  // use default DB
 	})
 }
+func SaveReservation(ctx context.Context, client *redis.Client, key string, res *Model.Reservation) error {
+	return client.Set(ctx, key, res, 0).Err()
+}
 
 func saveReservation(reservation m.Reservation) {
 	// Simpan reservasi ke cache
