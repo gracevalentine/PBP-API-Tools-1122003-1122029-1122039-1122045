@@ -1,15 +1,18 @@
 package controller
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
 	m "EksplorasiToolsAPI/Model"
+
+	"github.com/go-redis/redis"
 )
 
 func HandleReservation(ctx context.Context, client *redis.Client, w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		var res Reservation
+		var res m.Reservation
 		err := json.NewDecoder(r.Body).Decode(&res)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -17,7 +20,7 @@ func HandleReservation(ctx context.Context, client *redis.Client, w http.Respons
 		}
 
 		// Simpan reservasi ke cache
-		err = saveReservation(ctx, client, "latest_reservation", &res)
+		err = saveReservation(client, "latest_reservation", &res)
 		if err != nil {
 			http.Error(w, "Failed to save reservation", http.StatusInternalServerError)
 			return
@@ -25,7 +28,7 @@ func HandleReservation(ctx context.Context, client *redis.Client, w http.Respons
 
 		// Jadwalkan pengiriman email
 		// Anda perlu memperbarui fungsi scheduleJob Anda untuk menerima argumen yang sama
-		err = scheduleJob(ctx, client, &res)
+		err = scheduleJob(res)
 		if err != nil {
 			http.Error(w, "Failed to schedule email", http.StatusInternalServerError)
 			return
@@ -37,4 +40,3 @@ func HandleReservation(ctx context.Context, client *redis.Client, w http.Respons
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
-
