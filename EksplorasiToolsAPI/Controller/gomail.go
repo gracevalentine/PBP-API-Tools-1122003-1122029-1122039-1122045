@@ -26,4 +26,3 @@ func sendEmail(reservation m.Reservation) {
 		}
 	}()
 }
-

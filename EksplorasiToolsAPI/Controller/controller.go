@@ -17,7 +17,7 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Simpan reservasi ke cache
-		saveReservation(res)
+		SaveReservation(res)
 
 		// Jadwalkan pengiriman email
 		scheduleJob(res)
