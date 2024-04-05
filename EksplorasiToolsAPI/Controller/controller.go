@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	m "EksplorasiToolsAPI/Model"
@@ -29,4 +30,8 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+}
+
+func ShowReservation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(GetReservation())
 }

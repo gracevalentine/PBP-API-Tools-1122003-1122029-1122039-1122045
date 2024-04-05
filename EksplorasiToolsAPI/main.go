@@ -12,6 +12,7 @@ import (
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/reservation", c.HandleReservation).Methods("POST")
+	router.HandleFunc("/reservation/show", c.ShowReservation).Methods("GET")
 
 	fmt.Println("Connected to port 8888")
 	log.Println("Connected to port 8888")
