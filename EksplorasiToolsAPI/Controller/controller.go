@@ -15,9 +15,11 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-
+		go func() {
+			sendEmail(res)
+		}()
 		// Simpan reservasi ke cache
-		saveReservation(res)
+		SaveReservation(res)
 
 		// Jadwalkan pengiriman email
 		scheduleJob(res)
