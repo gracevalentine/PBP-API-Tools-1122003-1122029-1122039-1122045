@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"log"
-
+	"fmt"
 	"github.com/go-redis/redis"
 
 	m "EksplorasiToolsAPI/Model"
