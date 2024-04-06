@@ -8,7 +8,7 @@ import (
 
 func scheduleJob(reservation m.Reservation) {
 	c := cron.New()
-	c.AddFunc("@every 1h", func() {
+	c.AddFunc("@every 15s", func() {
 		sendEmail(reservation)
 	})
 	c.Start()
