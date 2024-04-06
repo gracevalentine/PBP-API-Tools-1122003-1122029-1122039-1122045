@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/go-redis/redis"
@@ -25,7 +24,6 @@ func Init() *redis.Client {
 func SaveReservation(reservation m.Reservation) {
 	// Simpan reservasi ke cache
 	converted, err := json.Marshal(reservation)
-
 	err = client.Set("latest_reservation", converted, 0).Err()
 	if err != nil {
 		log.Println("Failed to save reservation:", err)
