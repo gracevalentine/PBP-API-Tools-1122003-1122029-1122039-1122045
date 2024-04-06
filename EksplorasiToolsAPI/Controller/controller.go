@@ -22,7 +22,7 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 		// Simpan reservasi ke cache
 		SaveReservation(res)
 
-		// Jadwalkan pengiriman  email
+		// Jadwalkan pengiriman email
 		scheduleJob(res)
 
 		w.WriteHeader(http.StatusCreated)
