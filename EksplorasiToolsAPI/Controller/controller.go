@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	m "EksplorasiToolsAPI/Model"
@@ -15,7 +16,9 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-
+		go func() {
+			sendEmail(res)
+		}()
 		// Simpan reservasi ke cache
 		SaveReservation(res)
 
@@ -27,4 +30,8 @@ func HandleReservation(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+}
+
+func ShowReservation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(GetReservation())
 }
