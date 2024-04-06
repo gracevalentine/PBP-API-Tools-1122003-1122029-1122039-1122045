@@ -11,18 +11,15 @@ import (
 
 var client *redis.Client
 
-func init() {
+func Init() *redis.Client {
 	// Inisialisasi klien Redis
-	client = redis.NewClient(&redis.Options{
+	return redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
-}
 
-// func SaveReservation(ctx context.Context, client *redis.Client, key string, res *m.Reservation) error {
-// 	return client.Set(ctx, key, res, 0).Err()
-// }
+}
 
 func SaveReservation(reservation m.Reservation) {
 	// Simpan reservasi ke cache
@@ -33,4 +30,21 @@ func SaveReservation(reservation m.Reservation) {
 	} else {
 		log.Println("Reservation saved successfully")
 	}
+}
+
+func GetReservation() m.Reservation {
+	client := Init()
+	val, err := client.Get("latest_reservation").Result()
+	if err != nil {
+		log.Println(err)
+	}
+	var reservations m.Reservation
+	err = json.Unmarshal([]byte(val), &reservations)
+	if err != nil {
+		log.Println(err)
+	} else {
+		fmt.Println("Sucsess get reservations")
+	}
+
+	return reservations
 }
