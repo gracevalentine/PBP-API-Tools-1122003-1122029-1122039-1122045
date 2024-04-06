@@ -22,10 +22,6 @@ func Init() *redis.Client {
 
 }
 
-// func SaveReservation(ctx context.Context, client *redis.Client, key string, res *m.Reservation) error {
-// 	return client.Set(ctx, key, res, 0).Err()
-// }
-
 func SaveReservation(reservation m.Reservation) {
 	// Simpan reservasi ke cache
 	converted, err := json.Marshal(reservation)
